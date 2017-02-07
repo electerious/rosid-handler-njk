@@ -1,0 +1,43 @@
+{
+  "name": "rosid-handler-njk",
+  "version": "0.0.0",
+  "authors": [
+    "Tobias Reich <tobias@electerious.com>"
+  ],
+  "description": "Loads Nunjucks templates and transforms them to HTML",
+  "main": "src/index.js",
+  "keywords": [
+    "rosid",
+    "handler",
+    "transform",
+    "compile",
+    "njk",
+    "jinja",
+    "nunjucks",
+    "html"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/electerious/rosid-handler-njk",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/electerious/rosid-handler-njk.git"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "test": "istanbul cover _mocha"
+  },
+  "dependencies": {
+    "find-up": "^2.1.0",
+    "nunjucks": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.15",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "temp": "^0.8.3"
+  }
+}
