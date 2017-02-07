@@ -4,7 +4,7 @@
   "authors": [
     "Tobias Reich <tobias@electerious.com>"
   ],
-  "description": "Loads Nunjucks templates and transforms them to HTML",
+  "description": "Load Nunjucks templates and transforms them to HTML",
   "main": "src/index.js",
   "keywords": [
     "rosid",
