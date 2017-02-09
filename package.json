@@ -31,7 +31,8 @@
   },
   "dependencies": {
     "find-up": "^2.1.0",
-    "nunjucks": "^3.0.0"
+    "nunjucks": "^3.0.0",
+    "require-uncached": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
