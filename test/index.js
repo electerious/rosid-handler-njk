@@ -6,9 +6,9 @@ const assert = require('chai').assert
 const temp   = require('temp').track()
 const index  = require('./../src/index')
 
-const newFile = function(content, suffix) {
+const newFile = function(content, suffix, dir) {
 
-	const file = temp.openSync({ suffix })
+	const file = temp.openSync({ suffix, dir })
 
 	fs.writeFileSync(file.path, content)
 
@@ -16,15 +16,7 @@ const newFile = function(content, suffix) {
 
 }
 
-const dataPath = path.resolve(process.cwd(), './data.json')
-
 describe('index()', function() {
-
-	before(function() {
-
-		fs.writeFileSync(dataPath, '{}')
-
-	})
 
 	it('should return an error when called without a filePath', function() {
 
@@ -93,6 +85,35 @@ describe('index()', function() {
 		return index(file).then((data) => {
 
 			assert.strictEqual(data, 'dev')
+
+		})
+
+	})
+
+	it('should load Nunjucks and transform it to HTML with custom global data', function() {
+
+		const file = newFile('{{ key }}', '.njk')
+
+		const data = { key: 'value' }
+
+		return index(file, { data }).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
+	it('should load Nunjucks and transform it to HTML with custom render tag but without global data', function() {
+
+		const data = { key: 'value' }
+
+		const partial = newFile('{{ key }}{{ environment }}', '.njk')
+		const file    = newFile(`{% render '${ path.relative(path.dirname(partial), partial) }', ${ JSON.stringify(data) } %}`, '.njk', path.dirname(partial))
+
+		return index(file).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
 
 		})
 
@@ -173,12 +194,6 @@ describe('index()', function() {
 			assert.isArray(index.cache)
 
 		})
-
-	})
-
-	after(function() {
-
-		fs.unlinkSync(dataPath)
 
 	})
 

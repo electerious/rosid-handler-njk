@@ -1,8 +1,9 @@
 'use strict'
 
-const findUp = require('find-up')
-const njk    = require('./njk')
-const data   = require('./data')
+const path       = require('path')
+const locatePath = require('locate-path')
+const njk        = require('./njk')
+const data       = require('./data')
 
 /*
  * Load Nunjucks and transform to HTML.
@@ -20,8 +21,23 @@ module.exports = function(filePath, opts) {
 
 	}).then(() => {
 
-		// Find the data file by walking up parent directories
-		return findUp([ 'data.js', 'data.json' ])
+		const fileDir  = path.dirname(filePath)
+		const fileName = path.parse(filePath).name
+
+		// Look for the data in the same directory as filePath
+		const locateDataPath = locatePath([
+			`${ fileName }.data.js`,
+			`${ fileName }.data.json`
+		], {
+			cwd: fileDir
+		})
+
+		// Convert dataPath path to an absolute path
+		return locateDataPath.then((dataPath) => {
+
+			return dataPath==null ? null : path.join(fileDir, dataPath)
+
+		})
 
 	}).then((dataPath) => {
 

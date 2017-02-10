@@ -20,6 +20,7 @@ const njk = require('rosid-handler-njk')
 njk('/src/index.njk').then((data) => {})
 njk('/src/index.xml').then((data) => {})
 njk('/src/index.njk', { optimize: true }).then((data) => {})
+njk('/src/index.njk', { data: { key: 'value' } }).then((data) => {})
 ```
 
 ### Rosid
@@ -49,6 +50,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 - `filePath` `{String}` Absolute path to file.
 - `opts` `{?Object}` Options.
 	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
+	- `data` `{?Object}` - Data uses to render the template. Defaults to `{}`.
 
 ## Returns
 

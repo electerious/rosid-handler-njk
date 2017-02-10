@@ -14,15 +14,11 @@ module.exports = function(dataPath, filePath, opts) {
 
 	return new Promise((resolve, reject) => {
 
-		const current     = path.parse(filePath)
 		const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
+		const globalData  = (opts!=null && opts.data!=null) ? opts.data : {}
+		const localData   = dataPath==null ? {} : requireUncached(dataPath)
 
-		const dataJSON   = requireUncached(dataPath)
-		const globalData = dataJSON['*'] || {}
-		const pageData   = dataJSON[current.name] || {}
-
-		resolve(Object.assign({}, globalData, pageData, {
-			current,
+		resolve(Object.assign({}, globalData, localData, {
 			environment
 		}))
 
