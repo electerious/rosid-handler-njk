@@ -4,7 +4,7 @@ const path = require('path')
 const njk  = require('nunjucks')
 const pify = require('pify')
 
-/*
+/**
  * Custom tag for Nunjucks. Renders a file with custom data.
  * @param {String} basePath - Path to the folder of the Nunjucks file being rendered.
  */
@@ -34,9 +34,10 @@ const RenderTag = function(basePath) {
 
 }
 
-/*
+/**
  * Creates a new Nunjucks enviroment.
  * @param {String} filePath - Path to the Nunjucks file being rendered.
+ * @returns {Object} New Nunjucks enviroment.
  */
 const createEnvironment = function(filePath) {
 
@@ -55,7 +56,7 @@ const createEnvironment = function(filePath) {
 
 }
 
-/*
+/**
  * Renders a Nunjucks file with a new enviroment.
  * @param {String} filePath - Path to the Nunjucks file being rendered.
  * @param {Object} data - Nunjucks data used to render the file.
@@ -65,15 +66,16 @@ const render = function(filePath, data, next) {
 
 	const env = createEnvironment(filePath)
 
-	return env.render(filePath, data, next)
+	env.render(filePath, data, next)
 
 }
 
-/*
+/**
  * Transforms Nunjucks to HTML.
  * @public
  * @param {?String} filePath - Path to the Nunjucks file being rendered.
  * @param {?Object} data - Nunjucks data used to render the file.
+ * @returns {Promise} Returns the following properties if resolved: {String}.
  */
 module.exports = function(filePath, data) {
 
