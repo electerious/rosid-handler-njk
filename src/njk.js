@@ -8,9 +8,9 @@ const pify = require('pify')
  * Custom tag for Nunjucks. Renders a file with custom data.
  * @param {String} basePath - Path to the folder of the Nunjucks file being rendered.
  */
-const RenderTag = function(basePath) {
+const InjectTag = function(basePath) {
 
-	this.tags = [ 'render' ]
+	this.tags = [ 'inject' ]
 
 	this.parse = function(parser, nodes, lexer) {
 
@@ -50,7 +50,7 @@ const createEnvironment = function(filePath) {
 		autoescape: false
 	})
 
-	env.addExtension('render', new RenderTag(basePath))
+	env.addExtension('inject', new InjectTag(basePath))
 
 	return env
 

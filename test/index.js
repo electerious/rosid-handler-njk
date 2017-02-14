@@ -108,12 +108,12 @@ describe('index()', function() {
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with custom render tag but without global data', function() {
+	it('should load Nunjucks and transform it to HTML with custom inject tag but without global data', function() {
 
 		const data = { key: 'value' }
 
 		const partial = newFile('{{ key }}{{ environment }}', '.njk')
-		const file    = newFile(`{% render '${ path.relative(path.dirname(partial), partial) }', ${ JSON.stringify(data) } %}`, '.njk', path.dirname(partial))
+		const file    = newFile(`{% inject '${ path.relative(path.dirname(partial), partial) }', ${ JSON.stringify(data) } %}`, '.njk', path.dirname(partial))
 
 		return index(file).then((_data) => {
 
