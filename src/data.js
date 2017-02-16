@@ -7,11 +7,10 @@ const requireUncached = require('require-uncached')
  * Loads and parses data for Nunjucks.
  * @public
  * @param {String} dataPath - Path to the data JSON.
- * @param {String} filePath - Path to the Nunjucks file being rendered.
  * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {Object}.
  */
-module.exports = function(dataPath, filePath, opts) {
+module.exports = function(dataPath, opts) {
 
 	return new Promise((resolve, reject) => {
 

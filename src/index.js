@@ -42,7 +42,7 @@ module.exports = function(filePath, opts) {
 	}).then((dataPath) => {
 
 		// Get the data for Nunjucks
-		return data(dataPath, filePath, opts)
+		return data(dataPath, opts)
 
 	}).then((data) => {
 
