@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const fs   = require('fs')
 const njk  = require('nunjucks')
 const pify = require('pify')
 
@@ -28,7 +29,10 @@ const InjectTag = function(basePath) {
 		// Convert to absolute path
 		filePath = path.join(basePath, filePath)
 
-		render(filePath, data, next)
+		render(filePath, data, {
+			prepend : '',
+			append  : ''
+		}, next)
 
 	}
 
@@ -60,13 +64,24 @@ const createEnvironment = function(filePath) {
  * Renders a Nunjucks file with a new enviroment.
  * @param {String} filePath - Path to the Nunjucks file being rendered.
  * @param {Object} data - Nunjucks data used to render the file.
+ * @param {Object} opts - Options.
  * @param {Function} next - The callback that handles the response. Receives the following properties: err, str.
  */
-const render = function(filePath, data, next) {
+const render = function(filePath, data, opts, next) {
 
 	const env = createEnvironment(filePath)
 
-	env.render(filePath, data, next)
+	fs.readFile(filePath, 'utf8', (err, str) => {
+
+		if (err!=null) return next(err)
+
+		str = opts.prepend + str + opts.append
+
+		env.renderString(str, data, {
+			path: filePath
+		}, next)
+
+	})
 
 }
 
@@ -75,10 +90,17 @@ const render = function(filePath, data, next) {
  * @public
  * @param {?String} filePath - Path to the Nunjucks file being rendered.
  * @param {?Object} data - Nunjucks data used to render the file.
+ * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {String}.
  */
-module.exports = function(filePath, data) {
+module.exports = function(filePath, data, opts) {
 
-	return pify(render)(filePath, data)
+	const prepend = (opts!=null && typeof opts.prepend==='string') ? opts.prepend : ''
+	const append  = (opts!=null && typeof opts.append==='string') ? opts.append : ''
+
+	return pify(render)(filePath, data, {
+		prepend,
+		append
+	})
 
 }

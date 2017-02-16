@@ -47,7 +47,7 @@ module.exports = function(filePath, opts) {
 	}).then((data) => {
 
 		// Process file
-		return njk(filePath, data)
+		return njk(filePath, data, opts)
 
 	}).then((str) => {
 

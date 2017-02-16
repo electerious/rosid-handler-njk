@@ -135,6 +135,34 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks and transform it to HTML with a custom prepend', function() {
+
+		const prepend = 'value'
+
+		const file = newFile('', '.njk')
+
+		return index(file, { prepend }).then((data) => {
+
+			assert.strictEqual(data, prepend)
+
+		})
+
+	})
+
+	it('should load Nunjucks and transform it to HTML with a custom append', function() {
+
+		const append = 'value'
+
+		const file = newFile('', '.njk')
+
+		return index(file, { append }).then((data) => {
+
+			assert.strictEqual(data, append)
+
+		})
+
+	})
+
 	describe('.in()', function() {
 
 		it('should be a function', function() {
