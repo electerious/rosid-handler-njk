@@ -70,4 +70,8 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ### Custom data
 
-The data in `opts.data` will be used to render your templates. Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite the data.
+The data in `opts.data` will be used to render your template. Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite the data.
+
+### Environment
+
+`rosid-handler-njk` passes a variable called `environment` to your template. `environment` is `prod` when `opts.optimize` is `true` and `dev` when `opts.optimize` is `false`.
