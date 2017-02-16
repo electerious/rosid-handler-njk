@@ -8,7 +8,7 @@ const data       = require('./data')
 /**
  * Load Nunjucks and transform to HTML.
  * @public
- * @param {String} filePath - Absolute path to file.
+ * @param {String} filePath - Path to file.
  * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {String}.
  */

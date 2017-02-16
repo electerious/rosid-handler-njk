@@ -47,7 +47,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ## Parameters
 
-- `filePath` `{String}` Absolute path to file.
+- `filePath` `{String}` Path to file.
 - `opts` `{?Object}` Options.
 	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
 	- `data` `{?Object}` - Data uses to render the template. Defaults to `{}`.
