@@ -147,18 +147,18 @@ describe('index()', function() {
 
 		const data = { key: 'value' }
 
-		const partialName = `${ uuid() }.njk`
+		const filename = `${ uuid() }.njk`
 
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: partialName,
+				name: filename,
 				contents: '{{ key }}{{ environment }}'
 			},
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
-				contents: `{% inject '${ partialName }', ${ JSON.stringify(data) } %}`
+				contents: `{% inject '${ filename }', ${ JSON.stringify(data) } %}`
 			}
 		]
 
