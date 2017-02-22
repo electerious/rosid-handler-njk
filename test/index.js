@@ -244,6 +244,68 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks and transform it to HTML with custom data from a JS data file', function() {
+
+		const data = { key: 'value' }
+
+		const filename = uuid()
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ filename }.njk`,
+				contents: '{{ key }}'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ filename }.data.js`,
+				contents: `module.exports = ${ JSON.stringify(data) }`
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name)
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
+	it('should load Nunjucks and transform it to HTML with custom data from a JSON data file', function() {
+
+		const data = { key: 'value' }
+
+		const filename = uuid()
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ filename }.njk`,
+				contents: '{{ key }}'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ filename }.data.json`,
+				contents: JSON.stringify(data)
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name)
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
 	describe('.in()', function() {
 
 		it('should be a function', function() {
