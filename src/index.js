@@ -65,7 +65,7 @@ module.exports = function(filePath, opts) {
  */
 module.exports.in = function(opts) {
 
-	return (opts!=null && opts.in!=null) ? opts.in : 'njk'
+	return (opts!=null && opts.in!=null) ? opts.in : '.njk'
 
 }
 
@@ -77,7 +77,7 @@ module.exports.in = function(opts) {
  */
 module.exports.out = function(opts) {
 
-	return (opts!=null && opts.out!=null) ? opts.out : 'html'
+	return (opts!=null && opts.out!=null) ? opts.out : '.html'
 
 }
 

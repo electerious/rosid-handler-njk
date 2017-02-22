@@ -316,19 +316,19 @@ describe('index()', function() {
 
 		it('should return a default extension', function() {
 
-			assert.strictEqual(index.in(), 'njk')
+			assert.strictEqual(index.in(), '.njk')
 
 		})
 
 		it('should return a default extension when called with invalid options', function() {
 
-			assert.strictEqual(index.in(''), 'njk')
+			assert.strictEqual(index.in(''), '.njk')
 
 		})
 
 		it('should return a custom extension when called with options', function() {
 
-			assert.strictEqual(index.in({ in: 'xml' }), 'xml')
+			assert.strictEqual(index.in({ in: '.xml' }), '.xml')
 
 		})
 
@@ -344,19 +344,19 @@ describe('index()', function() {
 
 		it('should return a default extension', function() {
 
-			assert.strictEqual(index.out(), 'html')
+			assert.strictEqual(index.out(), '.html')
 
 		})
 
 		it('should return a default extension when called with invalid options', function() {
 
-			assert.strictEqual(index.out(''), 'html')
+			assert.strictEqual(index.out(''), '.html')
 
 		})
 
 		it('should return a custom extension when called with options', function() {
 
-			assert.strictEqual(index.out({ out: 'xml' }), 'xml')
+			assert.strictEqual(index.out({ out: '.xml' }), '.xml')
 
 		})
 
