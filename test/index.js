@@ -143,6 +143,35 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks and transform it to HTML with external custom global data', function() {
+
+		const data = { key: 'value' }
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: '{{ key }}'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.json`,
+				contents: JSON.stringify(data)
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name, { data: structure[1].name })
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
 	it('should load Nunjucks and transform it to HTML with custom inject tag but without global data', function() {
 
 		const data = { key: 'value' }

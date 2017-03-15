@@ -21,6 +21,7 @@ njk('/src/index.njk').then((data) => {})
 njk('/src/index.xml').then((data) => {})
 njk('/src/index.njk', { optimize: true }).then((data) => {})
 njk('/src/index.njk', { data: { key: 'value' } }).then((data) => {})
+njk('/src/index.njk', { data: './data.json' }).then((data) => {})
 ```
 
 ### Rosid
@@ -50,7 +51,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 - `filePath` `{String}` Path to file.
 - `opts` `{?Object}` Options.
 	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
-	- `data` `{?Object}` - Data uses to render the template. Defaults to `{}`.
+	- `data` `{?Object|String}` - Data uses to render the template. Defaults to `{}`.
 	- `prepend` `{?String}` - String that will be placed in front of the content of filePath. Defaults to `''`.
 	- `append` `{?String}` - String that will be placed at the end of the content of filePath. Defaults to `''`.
 
@@ -70,7 +71,9 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ### Custom data
 
-The data in `opts.data` will be used to render your template. Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite the data.
+The data in `opts.data` will be used to render your template. `rosid-handler-njk` tries to require the given module when a path (string) is specified instead of an object.
+
+Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite the data from `opts.data`.
 
 ### Environment
 

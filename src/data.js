@@ -15,8 +15,27 @@ module.exports = function(dataPath, opts) {
 	return new Promise((resolve, reject) => {
 
 		const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
-		const globalData  = (opts!=null && opts.data!=null) ? opts.data : {}
-		const localData   = dataPath==null ? {} : requireUncached(dataPath)
+
+		const globalData = (() => {
+
+			const hasData = opts!=null && opts.data!=null
+			if (hasData===false) return {}
+
+			const mustRequire = typeof opts.data==='string'
+			if (mustRequire===true) return requireUncached(opts.data)
+
+			return opts.data
+
+		})()
+
+		const localData = (() => {
+
+			const hasData = dataPath!=null
+			if (hasData===false) return {}
+
+			return requireUncached(dataPath)
+
+		})()
 
 		resolve(Object.assign({}, globalData, localData, {
 			environment
