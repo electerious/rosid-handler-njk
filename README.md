@@ -69,11 +69,13 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 {% inject 'button.njk', { color: 'purple', text: 'Button' } %}
 ```
 
-### Custom data
+### Data
 
-The data in `opts.data` will be used to render your template. `rosid-handler-njk` tries to require the given module when a path (string) is specified instead of an object.
+The data in `opts.data` will be used to render your template. `opts.data` can either be an object (the data) or a string (path to data file). `rosid-handler-njk` tries to require the path when a string is specified instead of an object. The path must be absolute or relative to the current working directory.
 
-Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite the data from `opts.data`.
+### Custom data per file
+
+Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite data from `opts.data`.
 
 ### Environment
 
