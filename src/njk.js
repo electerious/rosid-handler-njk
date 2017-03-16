@@ -54,9 +54,9 @@ const createEnvironment = function(filePath) {
 	// Get the directory of filePath
 	const basePath = path.dirname(filePath)
 
-	// Configure Nunjucks and ensure that all file includes are based
-	// on the folder of the Nunjucks file being rendered.
-	const env = new njk.Environment(new njk.FileSystemLoader(basePath), {
+	// Configure Nunjucks and ensure that all file includes are loadable.
+	// This behaviour is similar to EJS and allows to include files from everywhere.
+	const env = new njk.Environment(new njk.FileSystemLoader('/'), {
 		autoescape: false
 	})
 

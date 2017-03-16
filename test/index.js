@@ -119,6 +119,44 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks from a relative path and transform it to HTML', function() {
+
+		const foldername = uuid()
+		const filename   = `${ uuid() }.njk`
+
+		const structure = [
+			{
+				type: fsify.DIRECTORY,
+				name: foldername,
+				contents: [
+					{
+						type: fsify.FILE,
+						name: filename,
+						contents: 'value'
+					}
+				]
+			},
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: `{% include './${ foldername }/${ filename }' %}`
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			const relativePath = path.relative(process.cwd(), structure[1].name)
+
+			return index(relativePath)
+
+		}).then((data) => {
+
+			assert.strictEqual(data, structure[0].contents[0].contents)
+
+		})
+
+	})
+
 	it('should load Nunjucks and transform it to HTML with custom global data', function() {
 
 		const structure = [
