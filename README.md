@@ -66,6 +66,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 `rosid-handler-njk` adds a custom Nunjucks extension you can use in your templates. The Nunjucks tag `inject` allows you to include other Nunjucks files with custom data.
 
 ```
+{% inject 'button.njk' %}
 {% inject 'button.njk', { color: 'purple', text: 'Button' } %}
 ```
 

@@ -203,6 +203,35 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks and transform it to HTML with custom inject tag called without data', function() {
+
+		const filename = `${ uuid() }.njk`
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: filename,
+				contents: 'value'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: `{% inject '${ filename }' %}`
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[1].name)
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, structure[0].contents)
+
+		})
+
+	})
+
 	it('should load Nunjucks and transform it to optimized HTML when optimization enabled', function() {
 
 		const structure = [

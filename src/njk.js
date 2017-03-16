@@ -29,6 +29,12 @@ const InjectTag = function(basePath) {
 		// Convert to absolute path
 		filePath = path.join(basePath, filePath)
 
+		// Allow usage without data
+		if (next==null) {
+			next = data
+			data = null
+		}
+
 		render(filePath, data, {
 			prepend : '',
 			append  : ''
