@@ -22,7 +22,7 @@ module.exports = function(dataPath, opts) {
 			if (hasData===false) return {}
 
 			const mustRequire = typeof opts.data==='string'
-			if (mustRequire===true) return requireUncached(opts.data)
+			if (mustRequire===true) return requireUncached(path.resolve(opts.data))
 
 			return opts.data
 
