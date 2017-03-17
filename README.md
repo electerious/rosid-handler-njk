@@ -17,11 +17,11 @@ npm install rosid-handler-njk
 ```js
 const njk = require('rosid-handler-njk')
 
-njk('/src/index.njk').then((data) => {})
-njk('/src/index.xml').then((data) => {})
-njk('/src/index.njk', { optimize: true }).then((data) => {})
-njk('/src/index.njk', { data: { key: 'value' } }).then((data) => {})
-njk('/src/index.njk', { data: './data.json' }).then((data) => {})
+njk('index.njk').then((data) => {})
+njk('index.xml').then((data) => {})
+njk('index.njk', { optimize: true }).then((data) => {})
+njk('index.njk', { data: { key: 'value' } }).then((data) => {})
+njk('index.njk', { data: 'data.json' }).then((data) => {})
 ```
 
 ### Rosid
