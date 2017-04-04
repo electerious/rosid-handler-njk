@@ -1,6 +1,6 @@
 # rosid-handler-njk
 
-[![Travis Build Status](https://travis-ci.org/electerious/rosid-handler-njk.svg?branch=master)](https://travis-ci.org/electerious/rosid-handler-njk) [![Coverage Status](https://coveralls.io/repos/github/electerious/rosid-handler-njk/badge.svg?branch=master)](https://coveralls.io/github/electerious/rosid-handler-njk?branch=master) [![Dependencies](https://david-dm.org/electerious/rosid-handler-njk.svg)](https://david-dm.org/electerious/rosid-handler-njk#info=dependencies)
+[![Travis Build Status](https://travis-ci.org/electerious/rosid-handler-njk.svg?branch=master)](https://travis-ci.org/electerious/rosid-handler-njk) [![AppVeyor Status](https://ci.appveyor.com/api/projects/status/qman4a73c1ixphyl?svg=true)](https://ci.appveyor.com/project/electerious/rosid-handler-njk) [![Coverage Status](https://coveralls.io/repos/github/electerious/rosid-handler-njk/badge.svg?branch=master)](https://coveralls.io/github/electerious/rosid-handler-njk?branch=master) [![Dependencies](https://david-dm.org/electerious/rosid-handler-njk.svg)](https://david-dm.org/electerious/rosid-handler-njk#info=dependencies)
 
 A function that loads a Nunjucks template and transforms it to HTML.
 
