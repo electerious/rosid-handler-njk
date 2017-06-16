@@ -7,9 +7,9 @@ const pify = require('pify')
 
 /**
  * Custom tag for Nunjucks. Renders a file with custom data.
- * @param {String} basePath - Path to the folder of the Nunjucks file being rendered.
+ * @param {String} src - Path base for further injects with the inject tag.
  */
-const InjectTag = function(basePath) {
+const InjectTag = function(src) {
 
 	this.tags = [ 'inject' ]
 
@@ -26,10 +26,9 @@ const InjectTag = function(basePath) {
 
 	this.run = function(context, filePath, data, next) {
 
-		// Convert to absolute path
-		filePath = path.join(basePath, filePath)
+		filePath = path.resolve(src, filePath)
 
-		// Allow usage without data
+		// Allow usage without data passed to the tag
 		if (next==null) {
 			next = data
 			data = null
@@ -37,7 +36,8 @@ const InjectTag = function(basePath) {
 
 		render(filePath, data, {
 			prepend : '',
-			append  : ''
+			append  : '',
+			src
 		}, next)
 
 	}
@@ -46,21 +46,22 @@ const InjectTag = function(basePath) {
 
 /**
  * Creates a new Nunjucks enviroment.
- * @param {String} filePath - Path to the Nunjucks file being rendered.
+ * @param {String} src - Injects of the inject tag are using this folder as their path base.
  * @returns {Object} New Nunjucks enviroment.
  */
-const createEnvironment = function(filePath) {
+const createEnvironment = function(src) {
 
-	// Get the directory of filePath
-	const basePath = path.dirname(filePath)
+	// Nunjucks (by default) uses the current working directory to look for files.
+	// Paths in Nunjucks are always relative to the initial file.
+	const loader = new njk.FileSystemLoader([ '/' ])
 
-	// Configure Nunjucks and ensure that all file includes are loadable.
-	// This behaviour is similar to EJS and allows to include files from everywhere.
-	const env = new njk.Environment(new njk.FileSystemLoader('/'), {
+	// Create an enviroment without autoescaping.
+	// Otherwise it would escape the content of components, too.
+	const env = new njk.Environment(loader, {
 		autoescape: false
 	})
 
-	env.addExtension('inject', new InjectTag(basePath))
+	env.addExtension('inject', new InjectTag(src))
 
 	return env
 
@@ -75,7 +76,7 @@ const createEnvironment = function(filePath) {
  */
 const render = function(filePath, data, opts, next) {
 
-	const env = createEnvironment(filePath)
+	const env = createEnvironment(opts.src)
 
 	fs.readFile(filePath, 'utf8', (err, str) => {
 
@@ -103,10 +104,12 @@ module.exports = function(filePath, data, opts) {
 
 	const prepend = (opts!=null && typeof opts.prepend==='string') ? opts.prepend : ''
 	const append  = (opts!=null && typeof opts.append==='string') ? opts.append : ''
+	const src     = (opts!=null && typeof opts.src==='string') ? opts.src : process.cwd()
 
 	return pify(render)(filePath, data, {
 		prepend,
-		append
+		append,
+		src
 	})
 
 }

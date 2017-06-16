@@ -229,7 +229,9 @@ describe('index()', function() {
 
 		return fsify(structure).then((structure) => {
 
-			return index(structure[1].name)
+			return index(structure[1].name, {
+				src: path.dirname(structure[1].name)
+			})
 
 		}).then((_data) => {
 
@@ -258,7 +260,9 @@ describe('index()', function() {
 
 		return fsify(structure).then((structure) => {
 
-			return index(structure[1].name)
+			return index(structure[1].name, {
+				src: path.dirname(structure[1].name)
+			})
 
 		}).then((_data) => {
 

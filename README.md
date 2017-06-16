@@ -54,6 +54,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 	- `data` `{?Object|String}` - Data uses to render the template. Defaults to `{}`.
 	- `prepend` `{?String}` - String that will be placed in front of the content of filePath. Defaults to `''`.
 	- `append` `{?String}` - String that will be placed at the end of the content of filePath. Defaults to `''`.
+	- `src` `{?String}` - Path base for injects with the inject tag. Defaults to the current working directory.
 
 ## Returns
 
@@ -63,25 +64,25 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ### Inject tag
 
-`rosid-handler-njk` adds a custom Nunjucks extension you can use in your templates. The Nunjucks tag `inject` allows you to include other Nunjucks files with custom data.
+`rosid-handler-njk` adds a custom Nunjucks extension you can use in your templates. The Nunjucks tag `inject` allows you to include other Nunjucks files with custom data. This feature is currently not part of Nunjucks.
 
 ```html
 {% inject 'button.njk' %}
 {% inject 'button.njk', { color: 'purple', text: 'Button' } %}
 ```
 
-The path to the file is always relative to the current file. This behavior is different to Nunjucks's build-in `include` tag, where the path is relative to the initial file.
+The path to the file is always relative to the current working directory or to the path specified in `opts.src`. This behavior is different to Nunjucks's build-in `include` tag, where the path is relative to the initial file.
 
 ```html
-<!-- /index.njk -->
-{% inject 'includes/a.njk' %}
+<!-- src/index.njk -->
+{% inject 'src/includes/a.njk' %}
 {% include 'includes/a.njk' %}
 
-<!-- /includes/a.njk -->
-{% inject 'b.njk' %}
+<!-- src/includes/a.njk -->
+{% inject 'src/includes/b.njk' %}
 {% include 'includes/b.njk' %}
 
-<!-- /includes/b.njk -->
+<!-- src/includes/b.njk -->
 {{ 'This is a file' }}
 ```
 
