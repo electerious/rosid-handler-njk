@@ -26,7 +26,7 @@ njk('index.njk', { data: 'data.json' }).then((data) => {})
 
 ### Rosid
 
-Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid#routes). `rosid-handler-njk` will transform all matching Nunjucks files in your source folder to HTML.
+Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid/blob/master/docs/Routes.md). `rosid-handler-njk` will transform all matching Nunjucks files in your source folder to HTML.
 
 ```json
 {
