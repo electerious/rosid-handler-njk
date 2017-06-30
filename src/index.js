@@ -88,5 +88,6 @@ module.exports.out = function(opts) {
  */
 module.exports.cache = [
 	'.njk',
-	'.json'
+	'.json',
+	'.js'
 ]
