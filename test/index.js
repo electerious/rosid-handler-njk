@@ -1,10 +1,10 @@
 'use strict'
 
-const os     = require('os')
-const path   = require('path')
+const os = require('os')
+const path = require('path')
 const assert = require('chai').assert
-const uuid   = require('uuid/v4')
-const index  = require('./../src/index')
+const uuid = require('uuid/v4')
+const index = require('./../src/index')
 
 const fsify = require('fsify')({
 	cwd: os.tmpdir()
@@ -12,9 +12,9 @@ const fsify = require('fsify')({
 
 describe('index()', function() {
 
-	it('should return an error when called without a filePath', function() {
+	it('should return an error when called without a filePath', async function() {
 
-		return index().then((data) => {
+		return index().then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -26,7 +26,7 @@ describe('index()', function() {
 
 	})
 
-	it('should return an error when called with invalid options', function() {
+	it('should return an error when called with invalid options', async function() {
 
 		const structure = [
 			{
@@ -35,11 +35,9 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
 
-			return index(structure[0].name, '')
-
-		}).then((data) => {
+		return index(file, '').then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -51,9 +49,11 @@ describe('index()', function() {
 
 	})
 
-	it('should return an error when called with a fictive filePath', function() {
+	it('should return an error when called with a fictive filePath', async function() {
 
-		return index('test.njk').then((data) => {
+		const file = `${ uuid() }.njk`
+
+		return index(file).then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -66,7 +66,7 @@ describe('index()', function() {
 
 	})
 
-	it('should return an error when called with invalid Nunjucks', function() {
+	it('should return an error when called with invalid Nunjucks', async function() {
 
 		const structure = [
 			{
@@ -76,11 +76,9 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
 
-			return index(structure[0].name)
-
-		}).then((data) => {
+		return index(file).then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -93,7 +91,7 @@ describe('index()', function() {
 
 	})
 
-	it('should load Nunjucks and transform it to HTML', function() {
+	it('should load Nunjucks and transform it to HTML', async function() {
 
 		const structure = [
 			{
@@ -103,31 +101,26 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
+		const result = await index(file)
 
-			return index(structure[0].name)
-
-		}).then((data) => {
-
-			assert.strictEqual(data, 'dev')
-
-		})
+		assert.strictEqual(result, 'dev')
 
 	})
 
-	it('should load Nunjucks from a relative path and transform it to HTML', function() {
+	it('should load Nunjucks from a relative path and transform it to HTML', async function() {
 
-		const foldername = uuid()
-		const filename   = `${ uuid() }.njk`
+		const folderName = uuid()
+		const fileName = `${ uuid() }.njk`
 
 		const structure = [
 			{
 				type: fsify.DIRECTORY,
-				name: foldername,
+				name: folderName,
 				contents: [
 					{
 						type: fsify.FILE,
-						name: filename,
+						name: fileName,
 						contents: 'value'
 					}
 				]
@@ -135,25 +128,21 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
-				contents: `{% include './${ foldername }/${ filename }' %}`
+				contents: `{% include './${ folderName }/${ fileName }' %}`
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[1].name
+		const relativeFile = path.relative(process.cwd(), file)
+		const result = await index(relativeFile)
 
-			const relativePath = path.relative(process.cwd(), structure[1].name)
-
-			return index(relativePath)
-
-		}).then((data) => {
-
-			assert.strictEqual(data, structure[0].contents[0].contents)
-
-		})
+		assert.strictEqual(result, structure[0].contents[0].contents)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with custom global data', function() {
+	it('should load Nunjucks and transform it to HTML with custom global data', async function() {
+
+		const data = { key: 'value' }
 
 		const structure = [
 			{
@@ -163,21 +152,14 @@ describe('index()', function() {
 			}
 		]
 
-		const data = { key: 'value' }
+		const file = (await fsify(structure))[0].name
+		const result = await index(file, { data })
 
-		return fsify(structure).then((structure) => {
-
-			return index(structure[0].name, { data })
-
-		}).then((_data) => {
-
-			assert.strictEqual(_data, data.key)
-
-		})
+		assert.strictEqual(result, data.key)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with external custom global data', function() {
+	it('should load Nunjucks and transform it to HTML with external custom global data', async function() {
 
 		const data = { key: 'value' }
 
@@ -194,83 +176,63 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const parsedStructure = await fsify(structure)
+		const result = await index(parsedStructure[0].name, { data: parsedStructure[1].name })
 
-			return index(structure[0].name, { data: structure[1].name })
-
-		}).then((_data) => {
-
-			assert.strictEqual(_data, data.key)
-
-		})
+		assert.strictEqual(result, data.key)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with custom inject tag but without global data', function() {
+	it('should load Nunjucks and transform it to HTML with custom inject tag but without global data', async function() {
 
 		const data = { key: 'value' }
-
-		const filename = `${ uuid() }.njk`
+		const fileName = `${ uuid() }.njk`
 
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: filename,
+				name: fileName,
 				contents: '{{ key }}{{ environment }}'
 			},
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
-				contents: `{% inject '${ filename }', ${ JSON.stringify(data) } %}`
+				contents: `{% inject '${ fileName }', ${ JSON.stringify(data) } %}`
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const parsedStructure = await fsify(structure)
+		const result = await index(parsedStructure[1].name, { src: path.dirname(parsedStructure[1].name) })
 
-			return index(structure[1].name, {
-				src: path.dirname(structure[1].name)
-			})
-
-		}).then((_data) => {
-
-			assert.strictEqual(_data, data.key)
-
-		})
+		assert.strictEqual(result, data.key)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with custom inject tag called without data', function() {
+	it('should load Nunjucks and transform it to HTML with custom inject tag called without data', async function() {
 
-		const filename = `${ uuid() }.njk`
+		const fileName = `${ uuid() }.njk`
 
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: filename,
+				name: fileName,
 				contents: 'value'
 			},
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
-				contents: `{% inject '${ filename }' %}`
+				contents: `{% inject '${ fileName }' %}`
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const parsedStructure = await fsify(structure)
+		const result = await index(parsedStructure[1].name, { src: path.dirname(parsedStructure[1].name) })
 
-			return index(structure[1].name, {
-				src: path.dirname(structure[1].name)
-			})
-
-		}).then((_data) => {
-
-			assert.strictEqual(_data, structure[0].contents)
-
-		})
+		assert.strictEqual(result, structure[0].contents)
 
 	})
 
-	it('should load Nunjucks and transform it to optimized HTML when optimization enabled', function() {
+	it('should load Nunjucks and transform it to optimized HTML when optimization enabled', async function() {
 
 		const structure = [
 			{
@@ -280,19 +242,14 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
+		const result = await index(file, { optimize: true })
 
-			return index(structure[0].name, { optimize: true })
-
-		}).then((data) => {
-
-			assert.strictEqual(data, 'prod')
-
-		})
+		assert.strictEqual(result, 'prod')
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with a custom prepend', function() {
+	it('should load Nunjucks and transform it to HTML with a custom prepend', async function() {
 
 		const prepend = 'value'
 
@@ -304,19 +261,14 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
+		const result = await index(file, { prepend })
 
-			return index(structure[0].name, { prepend })
-
-		}).then((data) => {
-
-			assert.strictEqual(data, prepend)
-
-		})
+		assert.strictEqual(result, prepend)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with a custom append', function() {
+	it('should load Nunjucks and transform it to HTML with a custom append', async function() {
 
 		const append = 'value'
 
@@ -328,77 +280,60 @@ describe('index()', function() {
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
+		const result = await index(file, { append })
 
-			return index(structure[0].name, { append })
-
-		}).then((data) => {
-
-			assert.strictEqual(data, append)
-
-		})
+		assert.strictEqual(result, append)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with custom data from a JS data file', function() {
+	it('should load Nunjucks and transform it to HTML with custom data from a JS data file', async function() {
 
 		const data = { key: 'value' }
-
-		const filename = uuid()
+		const fileName = uuid()
 
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: `${ filename }.njk`,
+				name: `${ fileName }.njk`,
 				contents: '{{ key }}'
 			},
 			{
 				type: fsify.FILE,
-				name: `${ filename }.data.js`,
+				name: `${ fileName }.data.js`,
 				contents: `module.exports = ${ JSON.stringify(data) }`
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
+		const result = await index(file)
 
-			return index(structure[0].name)
-
-		}).then((_data) => {
-
-			assert.strictEqual(_data, data.key)
-
-		})
+		assert.strictEqual(result, data.key)
 
 	})
 
-	it('should load Nunjucks and transform it to HTML with custom data from a JSON data file', function() {
+	it('should load Nunjucks and transform it to HTML with custom data from a JSON data file', async function() {
 
 		const data = { key: 'value' }
-
-		const filename = uuid()
+		const fileName = uuid()
 
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: `${ filename }.njk`,
+				name: `${ fileName }.njk`,
 				contents: '{{ key }}'
 			},
 			{
 				type: fsify.FILE,
-				name: `${ filename }.data.json`,
+				name: `${ fileName }.data.json`,
 				contents: JSON.stringify(data)
 			}
 		]
 
-		return fsify(structure).then((structure) => {
+		const file = (await fsify(structure))[0].name
+		const result = await index(file)
 
-			return index(structure[0].name)
-
-		}).then((_data) => {
-
-			assert.strictEqual(_data, data.key)
-
-		})
+		assert.strictEqual(result, data.key)
 
 	})
 

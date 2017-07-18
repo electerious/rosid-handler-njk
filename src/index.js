@@ -1,9 +1,9 @@
 'use strict'
 
-const path       = require('path')
+const path = require('path')
 const locatePath = require('locate-path')
-const njk        = require('./njk')
-const data       = require('./data')
+const njk = require('./njk')
+const data = require('./data')
 
 /**
  * Load Nunjucks and transform to HTML.
@@ -12,20 +12,18 @@ const data       = require('./data')
  * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {String}.
  */
-module.exports = function(filePath, opts) {
+module.exports = async function(filePath, opts) {
 
-	return Promise.resolve().then(() => {
+	if (typeof filePath!=='string') throw new Error(`'filePath' must be a string`)
+	if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
 
-		if (typeof filePath!=='string')           throw new Error(`'filePath' must be a string`)
-		if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
+	const fileDir = path.dirname(filePath)
+	const fileName = path.parse(filePath).name
 
-	}).then(() => {
-
-		const fileDir  = path.dirname(filePath)
-		const fileName = path.parse(filePath).name
+	const dataPath = await (async () => {
 
 		// Look for the data in the same directory as filePath
-		const locateDataPath = locatePath([
+		const dataPath = await locatePath([
 			`${ fileName }.data.js`,
 			`${ fileName }.data.json`
 		], {
@@ -33,27 +31,13 @@ module.exports = function(filePath, opts) {
 		})
 
 		// Convert dataPath path to an absolute path
-		return locateDataPath.then((dataPath) => {
+		return dataPath==null ? null : path.join(fileDir, dataPath)
 
-			return dataPath==null ? null : path.join(fileDir, dataPath)
+	})()
 
-		})
+	const json = await data(dataPath, opts)
 
-	}).then((dataPath) => {
-
-		// Get the data for Nunjucks
-		return data(dataPath, opts)
-
-	}).then((data) => {
-
-		// Process file
-		return njk(filePath, data, opts)
-
-	}).then((str) => {
-
-		return str
-
-	})
+	return njk(filePath, json, opts)
 
 }
 

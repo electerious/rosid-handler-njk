@@ -1,8 +1,8 @@
 'use strict'
 
 const path = require('path')
-const fs   = require('fs')
-const njk  = require('nunjucks')
+const fs = require('fs')
+const njk = require('nunjucks')
 const pify = require('pify')
 
 /**
@@ -16,7 +16,7 @@ const InjectTag = function(src) {
 	this.parse = function(parser, nodes, lexer) {
 
 		const token = parser.nextToken()
-		const args  = parser.parseSignature(null, true)
+		const args = parser.parseSignature(null, true)
 
 		parser.advanceAfterBlockEnd(token.value)
 
@@ -35,8 +35,8 @@ const InjectTag = function(src) {
 		}
 
 		render(filePath, data, {
-			prepend : '',
-			append  : '',
+			prepend: '',
+			append: '',
 			src
 		}, next)
 
@@ -100,11 +100,11 @@ const render = function(filePath, data, opts, next) {
  * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {String}.
  */
-module.exports = function(filePath, data, opts) {
+module.exports = async function(filePath, data, opts) {
 
 	const prepend = (opts!=null && typeof opts.prepend==='string') ? opts.prepend : ''
-	const append  = (opts!=null && typeof opts.append==='string') ? opts.append : ''
-	const src     = (opts!=null && typeof opts.src==='string') ? opts.src : process.cwd()
+	const append = (opts!=null && typeof opts.append==='string') ? opts.append : ''
+	const src = (opts!=null && typeof opts.src==='string') ? opts.src : process.cwd()
 
 	return pify(render)(filePath, data, {
 		prepend,
