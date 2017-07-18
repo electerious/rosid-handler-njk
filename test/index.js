@@ -28,16 +28,14 @@ describe('index()', function() {
 
 	it('should return an error when called with invalid options', async function() {
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-
-		return index(file, '').then((result) => {
+		return index(structure[0].name, '').then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -51,9 +49,7 @@ describe('index()', function() {
 
 	it('should return an error when called with a fictive filePath', async function() {
 
-		const file = `${ uuid() }.njk`
-
-		return index(file).then((result) => {
+		return index(`${ uuid() }.njk`).then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -68,17 +64,15 @@ describe('index()', function() {
 
 	it('should return an error when called with invalid Nunjucks', async function() {
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
 				contents: '{{ + }}'
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-
-		return index(file).then((result) => {
+		return index(structure[0].name).then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -93,16 +87,15 @@ describe('index()', function() {
 
 	it('should load Nunjucks and transform it to HTML', async function() {
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
 				contents: '{{ environment }}'
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file)
+		const result = await index(structure[0].name)
 
 		assert.strictEqual(result, 'dev')
 
@@ -113,7 +106,7 @@ describe('index()', function() {
 		const folderName = uuid()
 		const fileName = `${ uuid() }.njk`
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.DIRECTORY,
 				name: folderName,
@@ -130,11 +123,10 @@ describe('index()', function() {
 				name: `${ uuid() }.njk`,
 				contents: `{% include './${ folderName }/${ fileName }' %}`
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[1].name
-		const relativeFile = path.relative(process.cwd(), file)
-		const result = await index(relativeFile)
+		const file = path.relative(process.cwd(), structure[1].name)
+		const result = await index(file)
 
 		assert.strictEqual(result, structure[0].contents[0].contents)
 
@@ -144,16 +136,15 @@ describe('index()', function() {
 
 		const data = { key: 'value' }
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
 				contents: '{{ key }}'
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file, { data })
+		const result = await index(structure[0].name, { data })
 
 		assert.strictEqual(result, data.key)
 
@@ -163,7 +154,7 @@ describe('index()', function() {
 
 		const data = { key: 'value' }
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
@@ -174,10 +165,9 @@ describe('index()', function() {
 				name: `${ uuid() }.json`,
 				contents: JSON.stringify(data)
 			}
-		]
+		])
 
-		const parsedStructure = await fsify(structure)
-		const result = await index(parsedStructure[0].name, { data: parsedStructure[1].name })
+		const result = await index(structure[0].name, { data: structure[1].name })
 
 		assert.strictEqual(result, data.key)
 
@@ -188,7 +178,7 @@ describe('index()', function() {
 		const data = { key: 'value' }
 		const fileName = `${ uuid() }.njk`
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: fileName,
@@ -199,10 +189,9 @@ describe('index()', function() {
 				name: `${ uuid() }.njk`,
 				contents: `{% inject '${ fileName }', ${ JSON.stringify(data) } %}`
 			}
-		]
+		])
 
-		const parsedStructure = await fsify(structure)
-		const result = await index(parsedStructure[1].name, { src: path.dirname(parsedStructure[1].name) })
+		const result = await index(structure[1].name, { src: path.dirname(structure[1].name) })
 
 		assert.strictEqual(result, data.key)
 
@@ -212,7 +201,7 @@ describe('index()', function() {
 
 		const fileName = `${ uuid() }.njk`
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: fileName,
@@ -223,10 +212,9 @@ describe('index()', function() {
 				name: `${ uuid() }.njk`,
 				contents: `{% inject '${ fileName }' %}`
 			}
-		]
+		])
 
-		const parsedStructure = await fsify(structure)
-		const result = await index(parsedStructure[1].name, { src: path.dirname(parsedStructure[1].name) })
+		const result = await index(structure[1].name, { src: path.dirname(structure[1].name) })
 
 		assert.strictEqual(result, structure[0].contents)
 
@@ -234,16 +222,15 @@ describe('index()', function() {
 
 	it('should load Nunjucks and transform it to optimized HTML when optimization enabled', async function() {
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
 				contents: '{{ environment }}'
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file, { optimize: true })
+		const result = await index(structure[0].name, { optimize: true })
 
 		assert.strictEqual(result, 'prod')
 
@@ -253,16 +240,15 @@ describe('index()', function() {
 
 		const prepend = 'value'
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
 				contents: ''
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file, { prepend })
+		const result = await index(structure[0].name, { prepend })
 
 		assert.strictEqual(result, prepend)
 
@@ -272,16 +258,15 @@ describe('index()', function() {
 
 		const append = 'value'
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
 				contents: ''
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file, { append })
+		const result = await index(structure[0].name, { append })
 
 		assert.strictEqual(result, append)
 
@@ -292,7 +277,7 @@ describe('index()', function() {
 		const data = { key: 'value' }
 		const fileName = uuid()
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ fileName }.njk`,
@@ -303,10 +288,9 @@ describe('index()', function() {
 				name: `${ fileName }.data.js`,
 				contents: `module.exports = ${ JSON.stringify(data) }`
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file)
+		const result = await index(structure[0].name)
 
 		assert.strictEqual(result, data.key)
 
@@ -317,7 +301,7 @@ describe('index()', function() {
 		const data = { key: 'value' }
 		const fileName = uuid()
 
-		const structure = [
+		const structure = await fsify([
 			{
 				type: fsify.FILE,
 				name: `${ fileName }.njk`,
@@ -328,10 +312,9 @@ describe('index()', function() {
 				name: `${ fileName }.data.json`,
 				contents: JSON.stringify(data)
 			}
-		]
+		])
 
-		const file = (await fsify(structure))[0].name
-		const result = await index(file)
+		const result = await index(structure[0].name)
 
 		assert.strictEqual(result, data.key)
 
