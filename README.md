@@ -86,6 +86,14 @@ The path to the file is always relative to the current working directory or to t
 {{ 'This is a file' }}
 ```
 
+### Shy filter
+
+`rosid-handler-njk` adds a custom filter that replaces `|` with `&shy;`.
+
+```html
+{{ 'Long head|lines are awe|some' | shy }}
+```
+
 ### Data
 
 The data in `opts.data` will be used to render your template. `opts.data` can either be an object (the data) or a string (path to data file). `rosid-handler-njk` tries to require the path when a string is specified instead of an object. The path must be absolute or relative to the current working directory.

@@ -45,6 +45,16 @@ const InjectTag = function(src) {
 }
 
 /**
+ * Custom filter for Nunjucks. Replaces pipes with shy.
+ * @param {*} target - The target object the filter gets applied on.
+ */
+const shyFilter = function(target) {
+
+	return target.replace(/\|/g, '&shy;')
+
+}
+
+/**
  * Creates a new Nunjucks enviroment.
  * @param {String} src - Injects of the inject tag are using this folder as their path base.
  * @returns {Object} New Nunjucks enviroment.
@@ -62,6 +72,7 @@ const createEnvironment = function(src) {
 	})
 
 	env.addExtension('inject', new InjectTag(src))
+	env.addFilter('shy', shyFilter)
 
 	return env
 
