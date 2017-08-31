@@ -109,7 +109,7 @@ const render = function(filePath, data, opts, next) {
  * @param {?String} filePath - Path to the Nunjucks file being rendered.
  * @param {?Object} data - Nunjucks data used to render the file.
  * @param {?Object} opts - Options.
- * @returns {Promise} Returns the following properties if resolved: {String}.
+ * @returns {Promise<String>} HTML.
  */
 module.exports = async function(filePath, data, opts) {
 
