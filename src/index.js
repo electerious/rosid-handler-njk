@@ -54,6 +54,6 @@ module.exports.out = function(opts) {
  */
 module.exports.cache = [
 	'**/*.njk',
-	'**/*.data.json',
-	'**/*.data.js'
+	'**/*.js',
+	'**/*.json'
 ]
