@@ -238,6 +238,22 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks and transform it to HTML with custom shy filter on an undefined variable', async function() {
+
+		const structure = await fsify([
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: `{{ target | shy }}`
+			}
+		])
+
+		const result = await index(structure[0].name)
+
+		assert.strictEqual(result, '')
+
+	})
+
 	it('should load Nunjucks and transform it to optimized HTML when optimization enabled', async function() {
 
 		const structure = await fsify([

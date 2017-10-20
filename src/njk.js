@@ -46,11 +46,11 @@ const InjectTag = function(src) {
 
 /**
  * Custom filter for Nunjucks. Replaces pipes with shy.
- * @param {*} target - The target object the filter gets applied on.
+ * @param {?String} target - The target object the filter gets applied on.
  */
 const shyFilter = function(target) {
 
-	return target.replace(/\|/g, '&shy;')
+	return target==null ? target : target.replace(/\|/g, '&shy;')
 
 }
 
