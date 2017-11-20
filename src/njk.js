@@ -56,12 +56,17 @@ const InjectTag = function(src) {
 }
 
 /**
- * Custom filter for Nunjucks. Replaces pipes with shy.
+ * Custom filter for Nunjucks. Replaces pipes with shy and
+ * indicates that the string should not be auto escaped.
  * @param {?String} target - The target object the filter gets applied on.
  */
 const shyFilter = function(target) {
 
-	return target==null ? target : target.replace(/\|/g, '&shy;')
+	if (target==null) return target
+
+	target = target.replace(/\|/g, '&shy;')
+
+	return new njk.runtime.SafeString(target)
 
 }
 

@@ -88,7 +88,7 @@ The path to the file is always relative to the current working directory or to t
 
 ### Shy filter
 
-`rosid-handler-njk` adds a custom filter that replaces `|` with `&shy;`.
+`rosid-handler-njk` adds a custom filter that replaces `|` with `&shy;` and indicates that the string should not be auto escaped by Nunjucks (similar to the `safe` filter).
 
 ```html
 {{ 'Long head|lines are awe|some' | shy }}
