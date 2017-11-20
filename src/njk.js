@@ -34,11 +34,22 @@ const InjectTag = function(src) {
 			data = null
 		}
 
-		render(filePath, data, {
+		const opts = {
 			prepend: '',
 			append: '',
 			src
-		}, next)
+		}
+
+		render(filePath, data, opts, (err, str) => {
+
+			if (err!=null) return next(err)
+
+			// Tell Nunjucks that it shouldn't escape the HTML of the component
+			str = new njk.runtime.SafeString(str)
+
+			next(null, str)
+
+		})
 
 	}
 
@@ -65,11 +76,7 @@ const createEnvironment = function(src) {
 	// Paths in Nunjucks are always relative to the initial file.
 	const loader = new njk.FileSystemLoader([ '/' ])
 
-	// Create an enviroment without autoescaping.
-	// Otherwise it would escape the content of components, too.
-	const env = new njk.Environment(loader, {
-		autoescape: false
-	})
+	const env = new njk.Environment(loader)
 
 	env.addExtension('inject', new InjectTag(src))
 	env.addFilter('shy', shyFilter)
