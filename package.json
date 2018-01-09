@@ -32,7 +32,6 @@
   "dependencies": {
     "find-up": "^2.1.0",
     "nunjucks": "^3.0.1",
-    "pify": "^3.0.0",
     "stealthy-require": "^1.1.1"
   },
   "devDependencies": {

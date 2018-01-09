@@ -1,9 +1,9 @@
 'use strict'
 
+const util = require('util')
 const path = require('path')
 const fs = require('fs')
 const njk = require('nunjucks')
-const pify = require('pify')
 
 /**
  * Custom tag for Nunjucks. Renders a file with custom data.
@@ -13,7 +13,7 @@ const InjectTag = function(src) {
 
 	this.tags = [ 'inject' ]
 
-	this.parse = function(parser, nodes, lexer) {
+	this.parse = function(parser, nodes) {
 
 		const token = parser.nextToken()
 		const args = parser.parseSignature(null, true)
@@ -59,6 +59,7 @@ const InjectTag = function(src) {
  * Custom filter for Nunjucks. Replaces pipes with shy and
  * indicates that the string should not be auto escaped.
  * @param {?String} target - The target object the filter gets applied on.
+ * @returns {*}
  */
 const shyFilter = function(target) {
 
@@ -129,7 +130,7 @@ module.exports = async function(filePath, data, opts) {
 	const append = (opts!=null && typeof opts.append==='string') ? opts.append : ''
 	const src = (opts!=null && typeof opts.src==='string') ? opts.src : process.cwd()
 
-	return pify(render)(filePath, data, {
+	return util.promisify(render)(filePath, data, {
 		prepend,
 		append,
 		src
