@@ -18,7 +18,6 @@ npm install rosid-handler-njk
 const handler = require('rosid-handler-njk')
 
 handler('index.njk').then((data) => {})
-handler('index.xml').then((data) => {})
 handler('index.njk', { optimize: true }).then((data) => {})
 handler('index.njk', { data: { key: 'value' } }).then((data) => {})
 handler('index.njk', { data: 'data.json' }).then((data) => {})
