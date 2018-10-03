@@ -54,7 +54,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [5.0.0] - 2017-07-19
 
-### New
+### Added
 
 - Only support Node.js 7 and 8
 - Shy filter for Nunjucks
