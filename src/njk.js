@@ -72,9 +72,9 @@ const shyFilter = function(target) {
 }
 
 /**
- * Creates a new Nunjucks enviroment.
+ * Creates a new Nunjucks environment.
  * @param {String} src - Injects of the inject tag are using this folder as their path base.
- * @returns {Object} New Nunjucks enviroment.
+ * @returns {Object} New Nunjucks environment.
  */
 const createEnvironment = function(src) {
 
@@ -92,7 +92,7 @@ const createEnvironment = function(src) {
 }
 
 /**
- * Renders a Nunjucks file with a new enviroment.
+ * Renders a Nunjucks file with a new environment.
  * @param {String} filePath - Path to the Nunjucks file being rendered.
  * @param {Object} data - Nunjucks data used to render the file.
  * @param {Object} opts - Options.
