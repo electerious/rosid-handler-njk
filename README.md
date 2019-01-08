@@ -50,7 +50,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 - `filePath` `{String}` Path to file.
 - `opts` `{?Object}` Options.
 	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
-	- `data` `{?Object|String}` - Data uses to render the template. Defaults to `{}`.
+	- `data` `{?Object|String}` - Data used to render the template. Defaults to `{}`.
 	- `prepend` `{?String}` - String that will be placed in front of the content of filePath. Defaults to `''`.
 	- `append` `{?String}` - String that will be placed at the end of the content of filePath. Defaults to `''`.
 	- `src` `{?String}` - Path base for injects with the inject tag. Defaults to the current working directory.
