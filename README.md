@@ -51,6 +51,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 - `opts` `{?Object}` Options.
 	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
 	- `data` `{?Object|String}` - Data used to render the template. Defaults to `{}`.
+	- `localOverwrites` `{?Boolean}` - Enable or disable [custom data per file](#custom-data-per-file). Defaults to `true`.
 	- `prepend` `{?String}` - String that will be placed in front of the content of filePath. Defaults to `''`.
 	- `append` `{?String}` - String that will be placed at the end of the content of filePath. Defaults to `''`.
 	- `src` `{?String}` - Path base for injects with the inject tag. Defaults to the current working directory.
@@ -99,7 +100,7 @@ The data in `opts.data` will be used to render your template. `opts.data` can ei
 
 ### Custom data per file
 
-Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite data from `opts.data`.
+Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.njk` to add or overwrite data from `opts.data`. You can disable this behaviour with the `localOverwrites` option.
 
 ### Environment
 
