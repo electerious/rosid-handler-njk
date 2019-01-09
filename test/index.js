@@ -187,7 +187,8 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
-				contents: `{% inject '${ fileName }', ${ JSON.stringify(data) } %}`
+				contents: `{%
+					t '${ fileName }', ${ JSON.stringify(data) } %}`
 			}
 		])
 
@@ -372,9 +373,7 @@ describe('index()', function() {
 			}
 		])
 
-		const result = await index(structure[0].name, {
-			localOverwrites: false
-		})
+		const result = await index(structure[0].name, { localOverwrites: false })
 
 		assert.strictEqual(result, '')
 
