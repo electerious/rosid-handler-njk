@@ -187,7 +187,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.njk`,
-				contents: `{% '${ fileName }', ${ JSON.stringify(data) } %}`
+				contents: `{% inject '${ fileName }', ${ JSON.stringify(data) } %}`
 			}
 		])
 
