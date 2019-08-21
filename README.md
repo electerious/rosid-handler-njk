@@ -55,6 +55,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 	- `prepend` `{?String}` - String that will be placed in front of the content of filePath. Defaults to `''`.
 	- `append` `{?String}` - String that will be placed at the end of the content of filePath. Defaults to `''`.
 	- `src` `{?String}` - Path base for injects with the inject tag. Defaults to the current working directory.
+	- `shy` `{?RegExp}` - What to replace when using the [shy filter](#shy-filter). Defaults to `/\|/g`.
 
 ## Returns
 
@@ -93,6 +94,8 @@ The path to the file is always relative to the current working directory or to t
 ```html
 {{ 'Long head|lines are awe|some' | shy }}
 ```
+
+You can customize the behaviour of the filter by passing a [custom `shy` regexp](#parameters) to the module.
 
 ### Data
 

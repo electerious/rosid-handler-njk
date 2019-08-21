@@ -238,6 +238,26 @@ describe('index()', function() {
 
 	})
 
+	it('should load Nunjucks and transform it to HTML with custom shy filter and pattern', async function() {
+
+		const target = 'Long headµlines with sym|bols are aweµsome'
+
+		const structure = await fsify([
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: `{{ '${ target }' | shy }}`
+			}
+		])
+
+		const result = await index(structure[0].name, {
+			shy: /µ/g
+		})
+
+		assert.strictEqual(result, 'Long head&shy;lines with sym|bols are awe&shy;some')
+
+	})
+
 	it('should load Nunjucks and transform it to HTML with custom shy filter on an undefined variable', async function() {
 
 		const structure = await fsify([
