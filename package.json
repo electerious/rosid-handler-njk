@@ -30,7 +30,7 @@
     "test": "nyc node_modules/mocha/bin/_mocha"
   },
   "dependencies": {
-    "continuous-stealthy-require": "^1.0.0",
+    "continuous-stealthy-require": "^2.0.0",
     "find-up": "^4.0.0",
     "nunjucks": "^3.2.0",
     "require-data": "^1.0.0"
